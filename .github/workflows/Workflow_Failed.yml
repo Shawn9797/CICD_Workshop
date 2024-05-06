@@ -16,5 +16,5 @@ jobs:
       with:
         scan-type: 'fs'
         format: 'table'
-        output: 'trivy-results.txt'
+        exit-code: '1'
         severity: 'HIGH'
