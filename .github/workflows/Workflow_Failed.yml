@@ -22,4 +22,6 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{secrets.SLACK_PRIVATE_HOOK}}
-      
+        SLACK_TITLE: Scan failed - Shawn
+        SlACK_MESSAGE_ON_SUCCESS: Failed trivy scan, see uploaded report
+         
