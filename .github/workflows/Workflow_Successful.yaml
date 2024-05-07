@@ -19,6 +19,12 @@ jobs:
         format: 'table'
         severity: 'CRITICAL'
 
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.5.0
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
@@ -35,6 +41,20 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: shawnshen97/go-fortune:${{ github.sha }}
+    
+    - name: Sign image with a key
+      run: |
+          images=""
+          for tag in ${TAGS}; do
+            images+="${tag}@${DIGEST} "
+          done
+          cosign generate-key-pair
+          cosign sign --key cosign.key $images
+          cosign verify --key cosign.pub $images
+        env:
+          TAGS: shawnshen97/go-fortune:${{ github.sha }}
+
+
 
         
         
