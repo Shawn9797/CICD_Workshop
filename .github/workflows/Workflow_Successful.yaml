@@ -62,6 +62,22 @@ jobs:
         name: cosign_public_key
         path: .github/workflows/cosign_public_key.txt
 
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{secrets.SLACK_PRIVATE_HOOK}}
+        SLACK_COLOR: success
+        SLACK_TITLE: Scan success - Shawn
+        SLACK_TOKEN: ${{secrets.SLACK_PRIVATEBOTTOKEN}}
+        SLACK_CHANNEL: workshopsubtest
+        SLACK_MESSAGE: |
+          '{"Name:": "Shanglong Shen",
+          "Metriculation:": "A0292087W",
+          "Email": "e1337903@u.nus.edu",
+          "Git": "https://github.com/${{ github.repository }}",
+          "Image": "https://hub.docker.com/repository/docker/shawnshen97/go-fortune"
+          }'
+
 
         
         
