@@ -51,8 +51,8 @@ jobs:
         cosign generate-key-pair
         cosign sign --key cosign.key $images
         cosign verify --key cosign.pub $images
-        env:
-          TAGS: shawnshen97/go-fortune:${{ github.sha }}
+      env:
+        TAGS: shawnshen97/go-fortune:${{ github.sha }}
 
 
 
