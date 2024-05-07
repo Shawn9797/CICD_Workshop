@@ -49,7 +49,7 @@ jobs:
           images+="${tag}@${DIGEST} "
         done
         cosign generate-key-pair
-        cosign sign --yes --key cosign.key $images
+        cosign sign --yes --key cosign.key ${images}
       env:
         TAGS: 'shawnshen97/go-fortune:${{ github.sha }}'
 
