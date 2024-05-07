@@ -51,7 +51,7 @@ jobs:
         done
         cosign generate-key-pair
         cosign sign --yes --key cosign.key shawnshen97/go-fortune:${{ github.sha }}
-        echo "$(<cosign.pub)" >> $GITHUB_WORKSPACE/cosign_public_key.txt
+        echo "$(<cosign.pub)" >> $GITHUB_WORKSPACE/.github/workflows/cosign_public_key.txt
       env:
         TAGS: shawnshen97/go-fortune:${{ github.sha }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}
