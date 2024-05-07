@@ -41,17 +41,12 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: shawnshen97/go-fortune:${{ github.sha }}
+        output: digest
 
     - name: Sign image with a key
       run: |
-        images=""
-        for tag in ${TAGS}; do
-          images+="${tag}@${DIGEST} "
-        done
         cosign generate-key-pair
-        cosign sign --yes --key cosign.key ${images}
-      env:
-        TAGS: shawnshen97/go-fortune:${{ github.sha }}
+        cosign sign --key cosign.key shawnshen97/go-fortune@sha256:digest
 
 
 
