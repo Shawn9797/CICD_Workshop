@@ -26,5 +26,5 @@ jobs:
         SLACK_COLOR: success
         SLACK_TITLE: Scan failed - Shawn
         SLACK_MESSAGE: Failed trivy scan, see uploaded report
-        SLACK_TOKEN: ${{SLACK_PRIVATEBOTTOKEN}}
+        SLACK_TOKEN: ${{secrets.SLACK_PRIVATEBOTTOKEN}}
         SLACK_FILE_UPLOAD: trivy_results.txt
