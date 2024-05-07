@@ -70,6 +70,7 @@ jobs:
         SLACK_TITLE: Scan success - Shawn
         SLACK_TOKEN: ${{secrets.SLACK_PRIVATEBOTTOKEN}}
         SLACK_CHANNEL: workshopsubtest
+        SLACKIFY_MARKDOWN: true
         SLACK_MESSAGE: |
           **Name**: Shanglong Shen,
           **Metriculation**: A0292087W,
