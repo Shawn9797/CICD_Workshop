@@ -56,6 +56,11 @@ jobs:
         TAGS: shawnshen97/go-fortune:${{ github.sha }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
+    - name: Upload cosign_public_key.txt as a workflow artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: cosign_public_key
+        path: .github/workflows/cosign_public_key.txt
 
 
         
