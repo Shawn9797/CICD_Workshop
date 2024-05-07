@@ -45,8 +45,16 @@ jobs:
 
     - name: Sign image with a key
       run: |
+        images=""
+        for tag in ${TAGS}; do
+          images+="${tag}@${DIGEST} "
+        done
         cosign generate-key-pair
-        cosign sign --key cosign.key shawnshen97/go-fortune@sha256:digest
+        cosign sign --yes --key ${TAGS}
+        echo "$(<cosign.pub)" >> $GITHUB_WORKSPACE/cosign_public_key.txt
+      env:
+        TAGS: shawnshen97/go-fortune:${{ github.sha }}
+        DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
 
 
