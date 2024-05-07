@@ -24,5 +24,9 @@ jobs:
         SLACK_WEBHOOK: ${{secrets.SLACK_PRIVATE_HOOK}}
         SLACK_COLOR: success
         SLACK_TITLE: Scan failed - Shawn
-        SlACK_MESSAGE: Failed trivy scan, see uploaded report
-         
+        SLACK_MESSAGE: Failed trivy scan, see uploaded report
+    
+    - name: Upload Report
+      uses: Melicli/slack-upload-file@v4
+      with:
+        
