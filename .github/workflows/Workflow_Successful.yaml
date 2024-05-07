@@ -49,18 +49,16 @@ jobs:
         for tag in ${TAGS}; do
           images+="${tag}@${DIGEST} "
         done
-        cosign generate-key-pair
-        cosign sign --yes --key cosign.key shawnshen97/go-fortune:${{ github.sha }}
-        echo "$(<cosign.pub)" >> $GITHUB_WORKSPACE/.github/workflows/cosign_public_key.txt
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY shawnshen97/go-fortune:${{ github.sha }}
       env:
         TAGS: shawnshen97/go-fortune:${{ github.sha }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
-    - name: Upload cosign_public_key.txt as a workflow artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: cosign_public_key
-        path: .github/workflows/cosign_public_key.txt
+    - name: Verify image with public key
+      run: 
+        cosign verify --key cosign.pub ghcr.io/shawnshen97/go-fortune:${{ github.sha }}
 
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
@@ -72,10 +70,10 @@ jobs:
         SLACK_CHANNEL: workshopsubtest
         SLACKIFY_MARKDOWN: true
         SLACK_MESSAGE: |
-          **Name**: Shanglong Shen,
-          **Metriculation**: A0292087W,
-          **Email**: e1337903@u.nus.edu,
-          **Git**: https://github.com/${{ github.repository }},
+          **Name**: Shanglong Shen
+          **Metriculation**: A0292087W
+          **Email**: e1337903@u.nus.edu
+          **Git**: https://github.com/${{ github.repository }}
           **Image**: https://hub.docker.com/repository/docker/shawnshen97/go-fortune
           
 
