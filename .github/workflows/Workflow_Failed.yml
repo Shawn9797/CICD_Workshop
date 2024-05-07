@@ -29,4 +29,6 @@ jobs:
         SLACK_TOKEN: ${{secrets.SLACK_PRIVATEBOTTOKEN}}
         SLACK_CHANNEL: workshopsubtest
         SLACK_FILE_UPLOAD: trivy_results.txt
-        
+
+    - name: Exit in failure
+      run: exit 1    
