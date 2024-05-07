@@ -17,6 +17,7 @@ jobs:
         scan-type: 'fs'
         format: 'table'
         severity: 'HIGH'
+        output: 'trivy_results.txt'
 
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
@@ -25,4 +26,5 @@ jobs:
         SLACK_COLOR: success
         SLACK_TITLE: Scan failed - Shawn
         SLACK_MESSAGE: Failed trivy scan, see uploaded report
+        SLACK_FILE_UPLOAD: trivy_results.txt
         
