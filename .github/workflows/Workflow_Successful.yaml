@@ -71,12 +71,12 @@ jobs:
         SLACK_TOKEN: ${{secrets.SLACK_PRIVATEBOTTOKEN}}
         SLACK_CHANNEL: workshopsubtest
         SLACK_MESSAGE: |
-          '{"Name:": "Shanglong Shen",
-          "Metriculation:": "A0292087W",
-          "Email": "e1337903@u.nus.edu",
-          "Git": "https://github.com/${{ github.repository }}",
-          "Image": "https://hub.docker.com/repository/docker/shawnshen97/go-fortune"
-          }'
+          **Name**: Shanglong Shen,
+          **Metriculation**: A0292087W,
+          **Email**: e1337903@u.nus.edu,
+          **Git**: https://github.com/${{ github.repository }},
+          **Image**: https://hub.docker.com/repository/docker/shawnshen97/go-fortune
+          
 
 
         
