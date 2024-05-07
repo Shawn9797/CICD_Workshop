@@ -60,6 +60,7 @@ jobs:
       run: 
         cosign verify --key cosign.pub ghcr.io/shawnshen97/go-fortune:${{ github.sha }}
 
+
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
