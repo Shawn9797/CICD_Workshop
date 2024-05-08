@@ -1,4 +1,4 @@
-name: Build and Push(High)
+name: Build and Push(CRITICAL)
 on:
   push:
     branches:
