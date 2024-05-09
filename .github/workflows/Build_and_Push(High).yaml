@@ -23,7 +23,7 @@ jobs:
         exit-code: 1
 
 
-  Actions_for_failure:
+  Actions_for_failure: 
     needs: goLang_Scan
     runs-on: ubuntu-latest
     if: failure()
@@ -42,7 +42,7 @@ jobs:
       run: exit 1
 
 
-  Actions_for_failure:
+  Actions_for_success:
     needs: goLang_Scan
     runs-on: ubuntu-latest
     if: success()
