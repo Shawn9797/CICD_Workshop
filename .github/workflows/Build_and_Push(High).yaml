@@ -38,7 +38,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: trivy-results
-        path: .
+        path: trivy_results.txt
         
     - name: Slack Notification when vulnerabilities detected
       uses: rtCamp/action-slack-notify@v2
