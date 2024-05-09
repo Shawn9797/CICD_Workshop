@@ -1,0 +1,126 @@
+name: Build and Push(High)
+on:
+  push:
+    branches:
+    - 'release/v[0-9]+.[0-9]+'
+
+jobs:
+  goLang_Scan:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, '#NORUN')"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner in repo mode
+      id: trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        format: 'table'
+        severity: 'CRITICAL'
+        output: 'trivy_results.txt'
+        exit-code: 1
+
+    - name: Upload Trivy scan results
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: trivy-results
+        path: trivy_results.txt
+
+
+  Actions_for_failure: 
+    needs: goLang_Scan
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+    - name: Download Trivy scan results
+      uses: actions/download-artifact@v2
+      with:
+        name: trivy-results
+        path: .
+        
+    - name: Slack Notification when vulnerabilities detected
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{secrets.SLACK_TESTSUBMISSION_HOOK}}
+        SLACK_TITLE: Scan failed - Shawn
+        SLACK_MESSAGE: Failed trivy scan, see uploaded report
+        SLACK_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+        SLACK_CHANNEL: test-submission
+        SLACK_FILE_UPLOAD: trivy_results.txt
+
+    - name: Exit in failure
+      run: exit 1
+
+
+  Actions_for_success:
+    needs: goLang_Scan
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.5.0
+
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: shawnshen97/go-fortune:${{ github.sha }}
+        output: digest
+
+    - name: Sign image with a key
+      run: |
+        images=""
+        for tag in ${TAGS}; do
+          images+="${tag}@${DIGEST} "
+        done
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY shawnshen97/go-fortune:${{ github.sha }}
+      env:
+        TAGS: shawnshen97/go-fortune:${{ github.sha }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        DIGEST: ${{ steps.build-and-push.outputs.digest }}
+
+    - name: Verify image with public key
+      run: 
+        cosign verify --key cosign.pub shawnshen97/go-fortune:${{ github.sha }}
+
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{secrets.SLACK_TESTSUBMISSION_HOOK}}
+        SLACK_COLOR: success
+        SLACK_TITLE: Scan success - Shawn
+        SLACK_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
+        SLACK_CHANNEL: submission
+        SLACKIFY_MARKDOWN: true
+        SLACK_MESSAGE: |
+          **Name**: Shen Shanglong
+          **Metriculation**: A0292087W
+          **Email**: e1337903@u.nus.edu
+          **Git**: https://github.com/${{ github.repository }}
+          **Image**: https://hub.docker.com/repository/docker/shawnshen97/go-fortune
+          
+
