@@ -21,9 +21,9 @@ jobs:
         severity: 'HIGH'
         output: 'trivy_results.txt'
         exit-code: 1
-      continue-on-error: true
 
     - name: Upload Trivy scan results
+      if: failure()
       uses: actions/upload-artifact@v2
       with:
         name: trivy-results
