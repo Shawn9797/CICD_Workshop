@@ -22,12 +22,24 @@ jobs:
         output: 'trivy_results.txt'
         exit-code: 1
 
+    - name: Upload Trivy scan results
+      uses: actions/upload-artifact@v2
+      with:
+        name: trivy-results
+        path: trivy_results.txt
+
 
   Actions_for_failure: 
     needs: goLang_Scan
     runs-on: ubuntu-latest
     if: failure()
     steps:
+    - name: Download Trivy scan results
+      uses: actions/download-artifact@v2
+      with:
+        name: trivy-results
+        path: .
+        
     - name: Slack Notification when vulnerabilities detected
       uses: rtCamp/action-slack-notify@v2
       env:
