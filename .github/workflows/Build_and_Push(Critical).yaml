@@ -47,6 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     if: success()
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
     - name: Install Cosign
       uses: sigstore/cosign-installer@v3.5.0
 
