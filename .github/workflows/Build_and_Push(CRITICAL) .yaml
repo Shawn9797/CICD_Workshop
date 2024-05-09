@@ -1,4 +1,4 @@
-name: Build and Push(High)
+name: Build and Push(CRITICAL)
 on:
   push:
     branches:
@@ -44,11 +44,11 @@ jobs:
     - name: Slack Notification when vulnerabilities detected
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{secrets.SLACK_TESTSUBMISSION_HOOK}}
+        SLACK_WEBHOOK: ${{SLACK_SUBMISSION_HOOK}}
         SLACK_TITLE: Scan failed - Shawn
         SLACK_MESSAGE: Failed trivy scan, see uploaded report
         SLACK_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
-        SLACK_CHANNEL: test-submission
+        SLACK_CHANNEL: submission
         SLACK_FILE_UPLOAD: trivy_results.txt
 
     - name: Exit in failure
@@ -110,7 +110,7 @@ jobs:
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{secrets.SLACK_TESTSUBMISSION_HOOK}}
+        SLACK_WEBHOOK: ${{SLACK_SUBMISSION_HOOK}}
         SLACK_COLOR: success
         SLACK_TITLE: Scan success - Shawn
         SLACK_TOKEN: ${{secrets.SLACK_BOT_TOKEN}}
